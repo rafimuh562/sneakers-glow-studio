@@ -1,112 +1,397 @@
-/* ============================================
-   SNEAKERS GLOW STUDIO
-   SOFTWARE ENGINEER — SCRIPT.JS
-   Kalkulator harga dan validasi kode promo
-   ============================================ */
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Konfigurasi kode promo.
-    const PROMO_CODE = "SEPATUKECE";
-    const PROMO_DISCOUNT = 0.20;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sneakers Glow Studio menyediakan layanan pencucian dan perawatan sepatu dengan tiga pilihan paket. Hitung estimasi biaya dengan kalkulator online.">
+    <meta name="theme-color" content="#202124">
+    <title>Sneakers Glow Studio | Jasa Cuci dan Perawatan Sepatu</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-    // Mengambil elemen formulir.
-    const calcForm = document.getElementById("calc-form");
-    const packageSelect = document.getElementById("package-select");
-    const quantityInput = document.getElementById("quantity-input");
-    const promoInput = document.getElementById("promo-input");
+    <!-- CEO: HEADER DAN NAVIGASI -->
+    <header id="header-section" data-role="CEO" class="site-header">
+        <div class="header-container">
+            <a class="brand" href="#hero-section" aria-label="Sneakers Glow Studio - Beranda">
+                <span class="brand-mark" aria-hidden="true">SG</span>
+                <span class="brand-name">Sneakers <strong>Glow</strong> Studio</span>
+            </a>
 
-    // Mengambil elemen hasil perhitungan.
-    const resPackage = document.getElementById("res-package");
-    const resSubtotal = document.getElementById("res-subtotal");
-    const resDiscount = document.getElementById("res-discount");
-    const resPromoNote = document.getElementById("res-promo-note");
-    const resTotal = document.getElementById("res-total");
+            <nav class="main-nav" aria-label="Navigasi utama">
+                <a href="#hero-section">Beranda</a>
+                <a href="#catalog-section">Katalog</a>
+                <a href="#calc-section">Kalkulator</a>
+            </nav>
+        </div>
+    </header>
 
-    // Menghentikan script jika elemen utama tidak ditemukan.
-    if (
-        !calcForm ||
-        !packageSelect ||
-        !quantityInput ||
-        !promoInput ||
-        !resPackage ||
-        !resSubtotal ||
-        !resDiscount ||
-        !resPromoNote ||
-        !resTotal
-    ) {
-        console.error("Elemen kalkulator tidak lengkap. Periksa kembali index.html.");
-        return;
-    }
+    <main>
 
-    // Format angka ke mata uang Rupiah.
-    function formatRupiah(amount) {
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(amount);
-    }
+        <!-- PM 1: HERO SECTION -->
+        <section id="hero-section" data-role="PM" class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <p class="eyebrow hero-eyebrow">Sneakers Glow Studio</p>
 
-    // Menghitung harga paket, jumlah pasang, dan diskon promo.
-    function hitungBiaya() {
-        const selectedOption = packageSelect.options[packageSelect.selectedIndex];
-        const unitPrice = Number(packageSelect.value);
-        const packageName = selectedOption.dataset.name || selectedOption.textContent;
-        const quantity = Number(quantityInput.value);
+                    <h1 class="hero-title">
+                        Sepatu Bersih,<br>
+                        <span>Tampil Lebih Percaya Diri!</span>
+                    </h1>
 
-        // Validasi jumlah harus bilangan bulat minimal satu.
-        if (
-            !Number.isFinite(unitPrice) ||
-            unitPrice <= 0 ||
-            !Number.isInteger(quantity) ||
-            quantity < 1
-        ) {
-            quantityInput.setCustomValidity("Jumlah pasang sepatu harus berupa bilangan bulat minimal 1.");
-            quantityInput.reportValidity();
-            quantityInput.setCustomValidity("");
-            return;
-        }
+                    <p class="hero-description">
+                        Rawat sepatu kesayanganmu bersama Sneakers Glow Studio.
+                        Tersedia layanan cuci cepat, pembersihan mendalam, hingga
+                        pewarnaan ulang agar sepatu kembali bersih, terawat, dan
+                        tampil lebih menarik.
+                    </p>
 
-        const subtotal = unitPrice * quantity;
-        const enteredPromo = promoInput.value.trim().toUpperCase();
+                    <h2 class="benefit-heading">Keunggulan Layanan Kami</h2>
 
-        let discount = 0;
-        let promoMessage = "Belum ada kode promo yang digunakan.";
+                    <ul class="benefit-list">
+                        <li>Pilihan paket perawatan sesuai kebutuhan sepatu.</li>
+                        <li>Layanan mulai dari cuci cepat hingga pewarnaan ulang.</li>
+                        <li>Harga dan estimasi waktu pengerjaan yang jelas.</li>
+                    </ul>
 
-        // Memeriksa kode promo tanpa membedakan huruf besar dan kecil.
-        if (enteredPromo === PROMO_CODE) {
-            discount = Math.round(subtotal * PROMO_DISCOUNT);
-            promoMessage = "Kode promo SEPATUKECE berhasil digunakan. Diskon 20% aktif.";
-        } else if (enteredPromo !== "") {
-            promoMessage = "Kode promo tidak valid. Diskon tidak diterapkan.";
-        }
+                    <a href="#calc-section" class="button button-primary">
+                        Hitung Biaya Sekarang →
+                    </a>
+                </div>
 
-        const total = subtotal - discount;
+                <aside class="hero-highlight" aria-label="Informasi layanan">
+                    <div class="highlight-icon" aria-hidden="true">✦</div>
+                    <p class="highlight-kicker">Saatnya sepatu tampil maksimal</p>
+                    <p class="highlight-title">Care for your sneakers.</p>
+                    <div class="highlight-divider"></div>
 
-        // Menampilkan rincian perhitungan ke halaman.
-        resPackage.textContent = `${packageName} (${formatRupiah(unitPrice)} × ${quantity} pasang)`;
-        resSubtotal.textContent = formatRupiah(subtotal);
-        resDiscount.textContent = formatRupiah(discount);
-        resPromoNote.textContent = promoMessage;
-        resTotal.textContent = formatRupiah(total);
+                    <div class="highlight-bottom">
+                        <div>
+                            <strong>3</strong>
+                            <span>Pilihan paket</span>
+                        </div>
+                        <div>
+                            <strong>20%</strong>
+                            <span>Diskon promo</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
 
-        // Memberi penanda visual ketika kode promo berhasil digunakan.
-        resPromoNote.classList.toggle("is-success", enteredPromo === PROMO_CODE);
-    }
+        <!-- PM 2: CATALOG SECTION -->
+        <section id="catalog-section" data-role="PM" class="catalog-section">
 
-    // Menjalankan kalkulasi saat tombol Hitung Biaya ditekan.
-    calcForm.addEventListener("submit", function (event) {
-        event.preventDefault();
+            <div class="section-heading">
+                <p class="eyebrow">Pilih Perawatanmu</p>
+                <h2 class="section-title">
+                    Pilihan Paket Perawatan Sepatu
+                </h2>
+                <p class="section-description">
+                    Pilih layanan yang sesuai dengan kondisi dan kebutuhan
+                    sepatu kesayanganmu.
+                </p>
+            </div>
 
-        // Validasi HTML: required, min, dan step.
-        if (!calcForm.reportValidity()) {
-            return;
-        }
+            <!-- INFORMASI PROMO -->
+            <div class="promo-banner">
+                <span class="promo-icon" aria-hidden="true">%</span>
+                <p>
+                    Pakai kode promo <strong>SEPATUKECE</strong> untuk mendapatkan
+                    <strong>diskon 20%</strong> saat menghitung biaya di kalkulator.
+                </p>
+            </div>
 
-        hitungBiaya();
-    });
+            <!-- DAFTAR PAKET -->
+            <div class="catalog-grid">
 
-    // Menampilkan estimasi awal sesuai pilihan default pada formulir.
-    hitungBiaya();
-});
+                <!-- PAKET 1 -->
+                <article class="package-card">
+                    <div class="package-topline">
+                        <span class="package-number">PAKET 01</span>
+                        <span class="package-symbol" aria-hidden="true">✦</span>
+                    </div>
+
+                    <h3 class="package-title">Paket Cuci Cepat</h3>
+
+                    <p class="package-price">
+                        Rp30.000 <span>/ pasang</span>
+                    </p>
+
+                    <p class="package-description">
+                        Perawatan praktis untuk menjaga kebersihan bagian
+                        luar sepatu.
+                    </p>
+
+                    <ul class="package-features">
+                        <li>Cuci bagian luar sepatu</li>
+                        <li>Sikat bagian sol</li>
+                        <li>Pengeringan</li>
+                    </ul>
+
+                    <p class="package-duration">
+                        <span aria-hidden="true">◷</span> Estimasi: 1 hari
+                    </p>
+                </article>
+
+                <!-- PAKET 2 -->
+                <article class="package-card package-card-featured">
+                    <div class="package-topline">
+                        <span class="package-number">PAKET 02</span>
+                        <span class="package-tag">Pilihan lengkap</span>
+                    </div>
+
+                    <h3 class="package-title">
+                        Paket Pembersihan Mendalam
+                    </h3>
+
+                    <p class="package-price">
+                        Rp65.000 <span>/ pasang</span>
+                    </p>
+
+                    <p class="package-description">
+                        Pembersihan menyeluruh untuk sepatu yang membutuhkan
+                        perawatan ekstra.
+                    </p>
+
+                    <ul class="package-features">
+                        <li>Cuci bagian luar dan dalam</li>
+                        <li>Pembersihan insole dan tali</li>
+                        <li>Menghilangkan noda</li>
+                        <li>Perawatan antibakteri dan pewangi</li>
+                    </ul>
+
+                    <p class="package-duration">
+                        <span aria-hidden="true">◷</span> Estimasi: 2–3 hari
+                    </p>
+                </article>
+
+                <!-- PAKET 3 -->
+                <article class="package-card">
+                    <div class="package-topline">
+                        <span class="package-number">PAKET 03</span>
+                        <span class="package-symbol" aria-hidden="true">✧</span>
+                    </div>
+
+                    <h3 class="package-title">
+                        Paket Pewarnaan Ulang Sepatu
+                    </h3>
+
+                    <p class="package-price">
+                        Rp110.000 <span>/ pasang</span>
+                    </p>
+
+                    <p class="package-description">
+                        Perawatan mendalam sekaligus memperbarui tampilan
+                        warna sepatu.
+                    </p>
+
+                    <ul class="package-features">
+                        <li>Semua layanan pembersihan mendalam</li>
+                        <li>Pengecatan ulang suede, kanvas, atau kulit</li>
+                        <li>Sealing sebagai pelindung</li>
+                    </ul>
+
+                    <p class="package-duration">
+                        <span aria-hidden="true">◷</span> Estimasi: 5–7 hari
+                    </p>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- SE: CALCULATOR SECTION -->
+        <section id="calc-section" data-role="SE" class="calc-section">
+
+            <div class="calc-layout">
+
+                <div class="calc-intro">
+                    <p class="eyebrow">Perkiraan Pesanan</p>
+
+                    <h2 class="section-title">
+                        Kalkulator Estimasi Biaya
+                    </h2>
+
+                    <p class="section-description">
+                        Pilih paket, masukkan jumlah pasang sepatu, lalu
+                        gunakan kode promo untuk melihat estimasi biaya
+                        perawatan.
+                    </p>
+
+                    <div class="calc-note">
+                        <strong>Promo spesial 20%</strong>
+                        <span>
+                            Masukkan kode SEPATUKECE untuk memperoleh
+                            potongan harga.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="calc-panel">
+
+                    <form id="calc-form" class="calc-form">
+
+                        <div class="form-group">
+                            <label for="package-select">
+                                Pilih Paket Layanan
+                            </label>
+
+                            <select id="package-select" name="package" required>
+                                <option value="30000" data-name="Paket Cuci Cepat">
+                                    Paket Cuci Cepat — Rp30.000
+                                </option>
+
+                                <option value="65000" data-name="Paket Pembersihan Mendalam">
+                                    Paket Pembersihan Mendalam — Rp65.000
+                                </option>
+
+                                <option value="110000" data-name="Paket Pewarnaan Ulang Sepatu">
+                                    Paket Pewarnaan Ulang Sepatu — Rp110.000
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantity-input">
+                                Jumlah Pasang Sepatu
+                            </label>
+
+                            <input
+                                type="number"
+                                id="quantity-input"
+                                name="quantity"
+                                min="1"
+                                step="1"
+                                value="1"
+                                inputmode="numeric"
+                                required
+                            >
+
+                            <small class="form-hint">
+                                Masukkan jumlah minimal 1 pasang.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="promo-input">
+                                Kode Promo <span>(opsional)</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="promo-input"
+                                name="promo"
+                                placeholder="Contoh: SEPATUKECE"
+                                autocomplete="off"
+                            >
+
+                            <small class="form-hint">
+                                Diskon 20% berlaku dengan kode SEPATUKECE.
+                            </small>
+                        </div>
+
+                        <button
+                            type="submit"
+                            id="calculate-btn"
+                            class="button button-primary button-full"
+                        >
+                            Hitung Biaya →
+                        </button>
+
+                    </form>
+
+                    <!-- HASIL PERHITUNGAN -->
+                    <div
+                        id="calc-result"
+                        class="calc-result"
+                        aria-live="polite"
+                        aria-atomic="true"
+                    >
+
+                        <div class="result-heading">
+                            <div>
+                                <p class="result-overline">Ringkasan</p>
+                                <h3>Rincian Perhitungan</h3>
+                            </div>
+                            <span class="result-check" aria-hidden="true">✓</span>
+                        </div>
+
+                        <div class="result-row">
+                            <span>Paket dipilih</span>
+                            <strong id="res-package">Paket Cuci Cepat</strong>
+                        </div>
+
+                        <div class="result-row">
+                            <span>Harga awal</span>
+                            <strong id="res-subtotal">Rp30.000</strong>
+                        </div>
+
+                        <div class="result-row">
+                            <span>Potongan diskon</span>
+                            <strong id="res-discount">Rp0</strong>
+                        </div>
+
+                        <p id="res-promo-note" class="promo-note">
+                            Belum ada kode promo yang digunakan.
+                        </p>
+
+                        <div class="result-total">
+                            <span>Total bayar akhir</span>
+                            <strong id="res-total">Rp30.000</strong>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CEO: FOOTER DAN IDENTITAS KELOMPOK -->
+    <footer id="footer-section" data-role="CEO" class="site-footer">
+
+        <div class="footer-container">
+
+            <div class="footer-brand-block">
+                <a class="brand footer-brand" href="#hero-section">
+                    <span class="brand-mark" aria-hidden="true">SG</span>
+                    <span class="brand-name">
+                        Sneakers <strong>Glow</strong> Studio
+                    </span>
+                </a>
+
+                <p>
+                    Jasa pencucian dan perawatan sepatu berbasis pemesanan web.
+                </p>
+            </div>
+
+            <div class="footer-team">
+                <h2>Kelompok 2 — WebDev C</h2>
+
+                <ul>
+                    <li>Muhammad Rafi Ardiansyah — 1710625192 (CEO)</li>
+                    <li>Muhammad Rafi Putra — 1710625151 (UI/UX Designer)</li>
+                    <li>Rizky Revalinno — 1710625203 (UI/UX Designer)</li>
+                    <li>Galang Sandy Dwi Laksono — 1710625123 (Software Engineer)</li>
+                    <li>Mochamad Kairo Saputra — 1710625127 (Product Manager)</li>
+                    <li>Farrel Zahran Susanto — 1710625197 (Product Manager)</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>
+                &copy; 2026 Sneakers Glow Studio.
+                Proyek Praktikum Web Development — Kelompok 2 WebDev C.
+            </p>
+        </div>
+
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+</html>
